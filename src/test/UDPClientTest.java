@@ -24,7 +24,7 @@ public class UDPClientTest {
 		// 4. Size the frame. 
 		frame.pack();
 
-		// 5. Show it.
+		// 5. Show it.   
 		frame.setVisible(true);
 
 		DatagramSocket clientSocket = null;
