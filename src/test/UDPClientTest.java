@@ -29,19 +29,19 @@ public class UDPClientTest {
 
 		DatagramSocket clientSocket = null;
 		try {
-			// clientSocket = new DatagramSocket();
+			clientSocket = new DatagramSocket(6061);
 			// 5.186.124.218
 //			InetAddress IPAddress = InetAddress.getByName("192.168.1.215");
 			
-			clientSocket = new DatagramSocket(null);
-			clientSocket.bind(new InetSocketAddress("192.168.1.101", 6061));
+//			clientSocket = new DatagramSocket(null);
+//			clientSocket.bind(new InetSocketAddress("192.168.1.101", 6061));
 			
 //			InetAddress serverIPAddress = InetAddress.getByName("5.186.124.218");
 			InetAddress serverIPAddress = InetAddress.getByName("5.186.124.218");
 			int serverPort = 6060;
+			byte[] sendData = new byte[504];
+			byte[] receiveData = new byte[504];
 			while (true) {
-				byte[] sendData = new byte[504];
-				byte[] receiveData = new byte[504];
 				// String sentence = inFromUser.readLine();
 				String sentence = "A" + Double.toString(Math.random()) + "A";
 				sendData = sentence.getBytes();
