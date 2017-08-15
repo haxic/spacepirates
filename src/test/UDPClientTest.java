@@ -16,7 +16,7 @@ public class UDPClientTest {
 		// InputStreamReader(System.in));
 		JFrame frame = new JFrame("FrameDemo");
 
-		// 2. Optional: What happens when the frame closes?
+		// 2. Optional: What happens when the frame closes? 
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		// 3. Create components and put them in the frame.
