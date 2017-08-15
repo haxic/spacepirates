@@ -8,11 +8,11 @@ public class Pinger {
 
 	public void onSend() {
 		pingLastTime = System.currentTimeMillis();
-		try {
-			Thread.sleep((long) (Math.random()*25+10));
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
+//		try {
+//			Thread.sleep((long) (Math.random()*25+10));
+//		} catch (InterruptedException e) {
+//			e.printStackTrace();
+//		}
 	}
 
 	public void onReceive() {
