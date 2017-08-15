@@ -29,12 +29,16 @@ public class UDPClientTest {
 
 		DatagramSocket clientSocket = null;
 		try {
-			clientSocket = new DatagramSocket();
+			// clientSocket = new DatagramSocket();
 			// 5.186.124.218
-			InetAddress IPAddress = InetAddress.getByName("5.186.124.218");
-			//clientSocket = new DatagramSocket(null);
-			//InetSocketAddress clientAddress = new InetSocketAddress("localhost", 6096);
-			//clientSocket.bind(clientAddress);
+//			InetAddress IPAddress = InetAddress.getByName("192.168.1.215");
+			
+			clientSocket = new DatagramSocket(null);
+			clientSocket.bind(new InetSocketAddress("192.168.1.101", 6061));
+			
+//			InetAddress serverIPAddress = InetAddress.getByName("5.186.124.218");
+			InetAddress serverIPAddress = InetAddress.getByName("5.186.124.218");
+			int serverPort = 6060;
 			while (true) {
 				byte[] sendData = new byte[504];
 				byte[] receiveData = new byte[504];
@@ -42,11 +46,10 @@ public class UDPClientTest {
 				String sentence = "A" + Double.toString(Math.random()) + "A";
 				sendData = sentence.getBytes();
 
-				DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, IPAddress, 6096);
+				DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, serverIPAddress, serverPort);
 				// DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length);
 
 				clientSocket.send(sendPacket);
-
 				DatagramPacket receivePacket = new DatagramPacket(receiveData, receiveData.length);
 				clientSocket.receive(receivePacket);
 				String modifiedSentence = new String(receivePacket.getData());
