@@ -9,8 +9,8 @@ import java.net.InetSocketAddress;
 public class UDPServerTest {
 	public static void main(String[] args) throws IOException {
 		DatagramSocket serverSocket = new DatagramSocket(null);
-//		InetSocketAddress serverAddress = new InetSocketAddress("192.168.1.215", 6060);
-		InetSocketAddress serverAddress = new InetSocketAddress("localhost", 6060);
+		InetSocketAddress serverAddress = new InetSocketAddress(6060);
+//		InetSocketAddress serverAddress = new InetSocketAddress("localhost", 6060);
 		System.out.println("Server started.");
 		serverSocket.bind(serverAddress);
 		byte[] receiveData = new byte[504];
