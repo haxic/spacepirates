@@ -1,5 +1,8 @@
 package test;
 
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
@@ -9,23 +12,35 @@ import java.net.SocketException;
 import java.nio.ByteBuffer;
 
 import javax.swing.JFrame;
+import javax.swing.JTextArea;
 
 public class UDPClientTest {
 	public static void main(String args[]) {
 		// BufferedReader inFromUser = new BufferedReader(new
 		// InputStreamReader(System.in));
 		JFrame frame = new JFrame("FrameDemo");
+		JTextArea textArea = new JTextArea(30, 80);
+		textArea.setBackground(Color.BLACK);
+		textArea.setForeground(Color.LIGHT_GRAY);
+		textArea.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 12));
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.add(textArea);
 		frame.pack();
 		frame.setVisible(true);
-
+		// frame.setSize(new Dimension(500, 500));
 		DatagramSocket clientSocket = null;
 		try {
-			clientSocket = new DatagramSocket(6061);
-			// InetAddress serverIPAddress =
-			// InetAddress.getByName("5.186.124.218");
-			InetAddress serverIPAddress = InetAddress.getByName("spacepirates.server.test");
+			clientSocket = new DatagramSocket();
+
+			String domain = "spacepirates.server.test";
+			String ip = "5.186.124.218";
 			int serverPort = 6060;
+
+			InetAddress serverIPAddress = InetAddress.getByName(domain);
+//			InetAddress serverIPAddress = InetAddress.getByName(domain);
+			// InetAddress serverIPAddress = InetAddress.getByAddress(domain,
+			// InetAddress.getByName(ip).getAddress());
+			textArea.append("Server ip: " + serverIPAddress + "\n");
 			byte[] sendData = new byte[504];
 			byte[] receiveData = new byte[504];
 			int packageReceiveCounter = 0;
@@ -37,7 +52,7 @@ public class UDPClientTest {
 				sendData[1] = sendPSC[1];
 				sendData[2] = sendPSC[2];
 				sendData[3] = sendPSC[3];
-				System.out.println("Send to server.");
+				textArea.append("Send data to server: " + packageSendCounter + "\n");
 				DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, serverIPAddress, serverPort);
 				clientSocket.send(sendPacket);
 				DatagramPacket receivePacket = new DatagramPacket(receiveData, receiveData.length);
@@ -45,7 +60,7 @@ public class UDPClientTest {
 				packageReceiveCounter++;
 				String modifiedSentence = new String(receivePacket.getData());
 				int value = IntToByteConversionTest.byteArrayToInt(receivePacket.getData(), 0);
-				System.out.println("FROM SERVER:" + value);
+				textArea.append("Received from server: " + value + "\n");
 			}
 		} catch (SocketException e) {
 			e.printStackTrace();
