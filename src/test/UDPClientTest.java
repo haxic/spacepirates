@@ -15,46 +15,37 @@ public class UDPClientTest {
 		// BufferedReader inFromUser = new BufferedReader(new
 		// InputStreamReader(System.in));
 		JFrame frame = new JFrame("FrameDemo");
-
-		// 2. Optional: What happens when the frame closes? 
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-		// 3. Create components and put them in the frame.
-
-		// 4. Size the frame. 
 		frame.pack();
-
-		// 5. Show it.   
 		frame.setVisible(true);
 
 		DatagramSocket clientSocket = null;
 		try {
 			clientSocket = new DatagramSocket(6061);
-			// 5.186.124.218
-//			InetAddress IPAddress = InetAddress.getByName("192.168.1.215");
-			
-//			clientSocket = new DatagramSocket(null);
-//			clientSocket.bind(new InetSocketAddress("192.168.1.101", 6061));
-			
-//			InetAddress serverIPAddress = InetAddress.getByName("5.186.124.218");
-			InetAddress serverIPAddress = InetAddress.getByName("5.186.124.218");
+			// InetAddress serverIPAddress =
+			// InetAddress.getByName("5.186.124.218");
+			InetAddress serverIPAddress = InetAddress.getByName("spacepirates.server.test");
 			int serverPort = 6060;
 			byte[] sendData = new byte[504];
 			byte[] receiveData = new byte[504];
-			while (true) {
+			int packageReceiveCounter = 0;
+			int packageSendCounter = 0;
+			while (packageSendCounter < 1000) {
 				// String sentence = inFromUser.readLine();
-				String sentence = "A" + Double.toString(Math.random()) + "A";
-				sendData = sentence.getBytes();
-
+				byte[] sendPSC = IntToByteConversionTest.intToByteArray(++packageSendCounter, 0);
+				sendData[0] = sendPSC[0];
+				sendData[1] = sendPSC[1];
+				sendData[2] = sendPSC[2];
+				sendData[3] = sendPSC[3];
+				System.out.println("Send to server.");
 				DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, serverIPAddress, serverPort);
-				// DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length);
-
 				clientSocket.send(sendPacket);
 				DatagramPacket receivePacket = new DatagramPacket(receiveData, receiveData.length);
 				clientSocket.receive(receivePacket);
+				packageReceiveCounter++;
 				String modifiedSentence = new String(receivePacket.getData());
-
-				System.out.println("FROM SERVER:" + modifiedSentence);
+				int value = IntToByteConversionTest.byteArrayToInt(receivePacket.getData(), 0);
+				System.out.println("FROM SERVER:" + value);
 			}
 		} catch (SocketException e) {
 			e.printStackTrace();
