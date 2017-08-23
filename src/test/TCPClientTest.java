@@ -34,11 +34,12 @@ public class TCPClientTest {
 
 		Socket clientSocket = null;
 		try {
-//			String serverIP = "5.186.124.218";
-			String serverIP = "localhost";
+			String serverIP = "5.186.147.73";
+			// String serverIP = "192.168.1.215";
+			// String serverIP = "localhost";
 			int serverPort = 6061;
+			textArea.append("Server ip: " + serverIP + "/" + serverPort + "\n");
 			clientSocket = new Socket(serverIP, serverPort);
-
 			BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
 			PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
 
@@ -60,8 +61,10 @@ public class TCPClientTest {
 				textArea.append("Server ip: " + serverIP + "\n");
 
 				packageReceiveCounter++;
-//				String modifiedSentence = new String(input);
-//				int value = IntToByteConversionTest.byteArrayToInt(receivePacket.getData(), 0);
+				// String modifiedSentence = new String(input);
+				// int value =
+				// IntToByteConversionTest.byteArrayToInt(receivePacket.getData(),
+				// 0);
 				textArea.append("Received from server: " + input + "\n");
 			}
 		} catch (SocketException e) {

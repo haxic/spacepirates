@@ -32,14 +32,12 @@ public class UDPClientTest {
 		try {
 			clientSocket = new DatagramSocket();
 
-			String domain = "spacepirates.server.test";
-			String ip = "5.186.124.218";
+			String serverIP = "5.186.147.73";
+			// String serverIP = "192.168.1.215";
+			// String serverIP = "localhost";
 			int serverPort = 6060;
+			InetAddress serverIPAddress = InetAddress.getByName(serverIP);
 
-			InetAddress serverIPAddress = InetAddress.getByName(domain);
-//			InetAddress serverIPAddress = InetAddress.getByName(domain);
-			// InetAddress serverIPAddress = InetAddress.getByAddress(domain,
-			// InetAddress.getByName(ip).getAddress());
 			textArea.append("Server ip: " + serverIPAddress + "\n");
 			byte[] sendData = new byte[504];
 			byte[] receiveData = new byte[504];
