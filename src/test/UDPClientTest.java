@@ -35,7 +35,7 @@ public class UDPClientTest {
 			String serverIP = "5.186.147.73";
 			// String serverIP = "192.168.1.215";
 			// String serverIP = "localhost";
-			int serverPort = 6060;
+			int serverPort = 6030;
 			InetAddress serverIPAddress = InetAddress.getByName(serverIP);
 
 			textArea.append("Server ip: " + serverIPAddress + "\n");
