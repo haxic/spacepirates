@@ -8,20 +8,20 @@ public class Pinger {
 
 	public void onSend() {
 		pingLastTime = System.currentTimeMillis();
-//		try {
-//			Thread.sleep((long) (Math.random()*25+10));
-//		} catch (InterruptedException e) {
-//			e.printStackTrace();
-//		}
+		// try {
+		// Thread.sleep((long) (Math.random()*25+10));
+		// } catch (InterruptedException e) {
+		// e.printStackTrace();
+		// }
 	}
 
-	public void onReceive() {
+	public String onReceive() {
 		int diff = (int) (System.currentTimeMillis() - pingLastTime);
 		pingAcc -= ping[pingPos];
 		pingAcc += diff;
 		ping[pingPos] = diff;
 		if (++pingPos == ping.length)
 			pingPos = 0;
-		System.out.println("LAST PING:" + diff + " AVERAGE PING:" + (pingAcc / 50));
+		return "LAST PING:" + diff + " AVERAGE PING:" + (pingAcc / 50);
 	}
 }
