@@ -9,8 +9,9 @@ import java.net.InetSocketAddress;
 public class UDPServerTest {
 	public static void main(String[] args) throws IOException {
 		DatagramSocket serverSocket = new DatagramSocket(null);
-		InetSocketAddress serverAddress = new InetSocketAddress("192.168.1.215", 6030);
-//		InetSocketAddress serverAddress = new InetSocketAddress("localhost", 6060);
+		int serverPort = 6030;
+		InetSocketAddress serverAddress = new InetSocketAddress("192.168.1.215", serverPort);
+//		InetSocketAddress serverAddress = new InetSocketAddress("localhost", serverPort);
 		System.out.println("Server started.");
 		serverSocket.bind(serverAddress);
 		byte[] receiveData = new byte[504];
@@ -19,7 +20,7 @@ public class UDPServerTest {
 		while (true) {
 			DatagramPacket receivePacket = new DatagramPacket(receiveData, receiveData.length);
 			serverSocket.receive(receivePacket);
-			pinger.onReceive();
+			System.out.println(pinger.onReceive());
 			sendData = receivePacket.getData();
 
 			InetAddress IPAddress = receivePacket.getAddress();

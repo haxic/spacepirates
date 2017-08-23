@@ -22,6 +22,6 @@ public class Pinger {
 		ping[pingPos] = diff;
 		if (++pingPos == ping.length)
 			pingPos = 0;
-		return "LAST PING:" + diff + " AVERAGE PING:" + (pingAcc / 50);
+		return "LAST PING:" + diff + " AVG PING:" + (pingAcc / 50);
 	}
 }
