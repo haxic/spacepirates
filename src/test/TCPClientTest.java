@@ -37,9 +37,10 @@ public class TCPClientTest {
 			String serverIP = "5.186.147.73";
 			// String serverIP = "192.168.1.215";
 			// String serverIP = "localhost";
-			int serverPort = 6061;
-			textArea.append("Server ip: " + serverIP + "/" + serverPort + "\n");
+			int serverPort = 6031;
+			textArea.append("Connecting to server: " + serverIP + ":" + serverPort + "...\n");
 			clientSocket = new Socket(serverIP, serverPort);
+			textArea.append("Connection established!\n");
 			BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
 			PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
 
