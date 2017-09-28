@@ -1,0 +1,145 @@
+
+3D model
+	Episode 2
+	Vertex Array Object (VAO)
+		An object in which data about a 3d model is stored. It's essentially a list of attribute lists that contains some type of data, for example:
+		0 vertex positions
+		1 vertex colors
+		2 mormal vectors
+		3 texture coordinates
+		4 etc
+		...
+		where each data set e.g. vertex positions, is stored as an VBO. Each VAO has an unique ID, which is used to access it.
+	
+	Episode 2
+	Vertex Buffer Object (VBO)
+		A VBO is essentially just an array of numbers.
+	
+	Episode 3
+	Optimization
+		Use index buffer for representing polygons instead of coordinates. The indexes points at the coordinates.
+		Basically, polygons may share the same coordinate (x,y,z) through a index (i), rather than having one duplicate each of the (x,y,z) coordinate.
+		This reduces the amount of data required to represent the 3d model. 
+
+Episode 4-5
+Uniform Variables
+	Whereas model data comes directly from models, uniform variables can be input directly through java.
+	Uniform variables are typically used to create lighting, fog, sunlight etc.	
+
+Episode 4-5
+OpenGL Shader Language (GLSL)
+	Used for programming Shaders.
+	
+	Vertex Shader
+		Executes one time for each vertex in the object that is being rendered.
+		Model data (BAOs from VAOs attribute list) and uniform variables are passed to the vertex shader.
+		The vertex shader may manipulate the inputed data.
+		Outputs data to the Fragment Shader.
+	Fragment Shader
+		Executes one time for each pixel that the object covers on the screen.
+		It takes the output from the fragment shader as input, and interpolates the data to calculate a pixel.
+		It outputs the color of the pixel.
+
+
+Episode 7
+Rendering multiple objects with the same model
+	Instead of loading the same model e.g. a 100 times to represent 100 different objects,
+	we simply use one model that we render 100 times. To do this, we use transformation matrixes.
+	The transformation matrix is calculated by the CPU and is used to determine an entity's position, orientation and scale in the 3d world.
+	This matrix is passed into the vertex shader, which multiplies it with each vertex position.
+	All you need to do, is pass a new transformation matrix for every entity that is going to get rendered, using
+	the entity's position, orientation and scale.
+Episode 7+8
+Model Matrix
+	Translate (move position)
+	Rotate
+	Scale
+		 __
+	->	|__|
+
+Episode 8 (REMEMBER 12:00-isch!!!)
+Projection Matrix
+	While the transformation matrix manipulates an entity's position, orientation and scale in the 3d world,
+	the projection matrix works like the eye from which we view the 3d world from.
+	The position and orientation of the eye can be moved around, but many other attributes can be used as well.
+	For example, we are using a 3d perspective projection matrix, which causes objects to look smaller at a longer distance.
+	It can also decide how close or far away objects can be to get rendered etc.
+	
+	
+		  /|
+		 / |
+	->	|  |
+		 \ |
+		  \|
+
+Episode 8
+View Matrix
+
+Episode 11
+Lighting
+	Normal Vector
+		Vector that a vertex is facing.
+	Per-Pixel Lighting
+		Requires light position and color, and entity normal vectors.
+		Use dot product of normal vector and to-light vector to determine how much a light source light up a vertex.
+		The closer the normal and to-light vectors are, the more brightness.
+	Episode 12
+	Specular Lighting
+		shineDamper and reflectivity
+	
+	Episode 13
+	Ambient lighting
+		Simply add a minimum variable larger then 0 when calculating brightness.
+		This could e.g. be value set directly in the shader or passed through a uniform variable.
+
+Episode 13
+More optimization - for rendering multiple entities using the same model
+	Instead of loading and unbinding the same model, including shaders and uniform variables, for every model using the same model,
+	load and unbind everything once and render all entities using the model in one go.
+	
+	The way this is done, is that we process each entity we want to render before we start rendering.
+	We store each entity in a batch based on which model it uses.
+	When rendering, it takes a batch of entities, load the model, renders all entities, then unbinds the model again.
+	This is done for each batch of entities.
+	This method improves performance of the GPU a lot, when there are multiple entities using the same models.
+	
+	Further improvement is to maintain the hashmap that keeps track of all the batches of entities,
+	rather than clearing it and process all entities that should be rendered each frame.
+	This method improves performance of the CPU a bit, when there are many entities.
+	
+SKIPPED:
+Episode 14
+Simple terrain
+
+Episode 15
+Simple transparency and lighting on back-faces
+	This works for two-sided faces only. To get this to work, back-culling needs to be disabled.
+	Simply discard updating a pixel if the current fragment's texture color is transparent.
+	
+	To fix lighting when looking at the back-side of a face, invert the normal in the fragment shader,
+	if the normal is facing away from the camera. This is calculated using the dot product between the to-camera vector
+	and the normal vector.
+
+SKIPPED:
+Episode 16
+Fog
+	Math for distance in GLSL: length(vec3 position1, vec3 position2)
+
+SKIPPED:
+Episode 17
+	Multitexturing
+		Blend map for mixing textures.
+		Possibly useful:
+			terrain texturing
+			phasing from undamaged to damaged/destroyed textures
+			reflection or similar attributes on specific places on models, e.g. reflection image.
+		Use multitexturing by activating and binding textures;
+			GL13.glActivateTexture(GL13.GL_TEXTURE<X>) and GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.getID())
+			and use uniform sampler2D variables to access them in the shader.
+
+Episode 18
+Player movement and Time-step
+
+Episode 19
+3rd person camera
+
