@@ -1,8 +1,10 @@
 package renderEngine;
 
 import org.joml.Matrix4f;
+import org.joml.Vector2f;
 
 import entities.Camera;
+import entities.Entity;
 import entities.Light;
 import textures.ModelTexture;
 import utils.Maths;
@@ -13,16 +15,21 @@ public class StaticShader extends ShaderProgram {
 	private static final String FRAGMENT_FILE = "shaders/shader.frag";
 	private static final float ambientLight = 0.2f;
 	
+	// Model View Projection matrixes
 	private int location_modelMatrix;
 	private int location_viewMatrix;
 	private int location_projectionMatrix;
+	// Lighting
 	private int location_lightPosition;
 	private int location_lightColor;
 	private int location_shineDamper;
 	private int location_reflectivity;
 	private int location_ambientLight;
 	private int location_allowBackLighting;
-
+	// Texture atlas
+	private int location_atlasSize;
+	private int location_textureOffset;
+	
 	public StaticShader() {
 		super(VERTEX_FILE, FRAGMENT_FILE);
 	}
@@ -48,6 +55,16 @@ public class StaticShader extends ShaderProgram {
 		location_reflectivity = super.getUniformLocation("reflectivity");
 		location_ambientLight = super.getUniformLocation("ambientLight");
 		location_allowBackLighting = super.getUniformLocation("allowBackLighting");
+		location_atlasSize = super.getUniformLocation("atlasSize");
+		location_textureOffset = super.getUniformLocation("textureOffset");
+	}
+	
+	public void loadTextureOffset(Vector2f textureOffset) {
+		super.loadVector2f(location_textureOffset, textureOffset);
+	}
+	
+	public void loadAtlasSize(float atlasSize) {
+		super.loadFloat(location_atlasSize, atlasSize);
 	}
 	
 	public void loadAllowBackLighting(boolean allowBackLighting) {

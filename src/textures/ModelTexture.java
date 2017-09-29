@@ -7,6 +7,15 @@ public class ModelTexture {
 	private float reflectivity = 0;
 	private boolean hasTransparency = false;
 	private boolean allowBackLighting = false;
+	private int atlasSize = 1;
+
+	public int getAtlasSize() {
+		return atlasSize;
+	}
+
+	public void setAtlasSize(int atlasSize) {
+		this.atlasSize = atlasSize;
+	}
 
 	public boolean isAllowBackLighting() {
 		return allowBackLighting;

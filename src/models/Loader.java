@@ -1,12 +1,5 @@
 package models;
 
-import static org.lwjgl.opengl.GL11.GL_RGBA;
-import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
-import static org.lwjgl.opengl.GL11.GL_UNSIGNED_BYTE;
-import static org.lwjgl.opengl.GL11.glBindTexture;
-import static org.lwjgl.opengl.GL11.glGenTextures;
-import static org.lwjgl.opengl.GL11.glTexImage2D;
-
 import java.awt.image.BufferedImage;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -19,6 +12,7 @@ import javax.imageio.ImageIO;
 
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL14;
 import org.lwjgl.opengl.GL15;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
@@ -35,7 +29,7 @@ public class Loader {
 	public RawModel loadToVAO(ModelData modelData) {
 		return loadToVAO(modelData.getVertices(), modelData.getTextureCoordinates(), modelData.getNormals(), modelData.getIndices());
 	}
-	
+
 	private RawModel loadToVAO(float[] vertices, float[] textureCoordinates, float[] normals, int[] indices) {
 		int vaoID = createVAO();
 		// Bind index buffer, positions and texture coordinates.
@@ -130,19 +124,27 @@ public class Loader {
 
 			data[i] = a << 24 | b << 16 | g << 8 | r;
 		}
-		
+
 		// Generate unique texture id.
-		int result = glGenTextures();
+		int result = GL11.glGenTextures();
 		textures.add(result);
 		// Bind texture.
-		glBindTexture(GL_TEXTURE_2D, result);
+		GL11.glBindTexture(GL11.GL_TEXTURE_2D, result);
 		// Create texture.
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, getDataAsIntBuffer(data));
+		GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, GL11.GL_RGBA, width, height, 0, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, getDataAsIntBuffer(data));
+		// Mipmapping - use down scaled resolution textures at distance
+		// Generate down scaled resolution textures
+		GL30.glGenerateMipmap(GL11.GL_TEXTURE_2D);
+		// Use down scaled resolution textures, when texture is rendered on a small surface, using smooth transition
+		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_LINEAR);
+		// glTexParameteri(GL11.GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+		GL11.glTexParameterf(GL11.GL_TEXTURE_2D, GL14.GL_TEXTURE_LOD_BIAS, -0.25f);
+
 		// Specify how the texture should be rendered on model.
-		GL11.glTexParameteri(GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_NEAREST);
-		GL11.glTexParameteri(GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_NEAREST);
+		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_NEAREST);
+		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_NEAREST);
 		// Unbind texture
-		glBindTexture(GL_TEXTURE_2D, 0);
+		GL11.glBindTexture(GL11.GL_TEXTURE_2D, 0);
 		return result;
 	}
 
@@ -179,6 +181,5 @@ public class Loader {
 		buffer.flip();
 		return buffer;
 	}
-
 
 }

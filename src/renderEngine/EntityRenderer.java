@@ -48,6 +48,8 @@ public class EntityRenderer {
 		GL20.glEnableVertexAttribArray(0);
 		GL20.glEnableVertexAttribArray(1);
 		GL20.glEnableVertexAttribArray(2);
+		// Pass texture model atlas size.
+		shader.loadAtlasSize(modelTexture.getAtlasSize());
 		// Enable back culling for entities that has transparency.
 		if (modelTexture.isHasTransparency())
 			MasterRenderer.disableBackCulling();
@@ -75,6 +77,7 @@ public class EntityRenderer {
 		// Model matrix
 		Matrix4f modelMatrix = Maths.createModelMatrix(entity.getPosition(), entity.getRotation(), entity.getScale());
 		shader.loadModelMatrix(modelMatrix);
+		shader.loadTextureOffset(entity.getTextureOffset());
 	}
 
 	/**

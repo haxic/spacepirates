@@ -21,11 +21,15 @@ public class Maths {
 	}
 	public static Matrix4f createViewMatrix(Camera camera) {
 		// Set identity matrix.
-		matrix1.identity();
-		matrix1.rotateX((float) Math.toRadians(camera.rotation.x));
-		matrix1.rotateY((float) Math.toRadians(camera.rotation.y));
-		matrix1.rotateZ((float) Math.toRadians(camera.rotation.z));
-		matrix1.translate(camera.position.negate(vector1));
+//		matrix1.identity();
+//		matrix1.rotateX((float) Math.toRadians(camera.rotation.x));
+//		matrix1.rotateY((float) Math.toRadians(camera.rotation.y));
+//		matrix1.rotateZ((float) Math.toRadians(camera.rotation.z));
+//		matrix1.translate(camera.position.negate(vector1));
+//		return matrix1;
+
+		matrix1 = new Matrix4f().lookAt(camera.E, camera.lookAt, camera.U);
+//		System.out.println(matrix1);
 		return matrix1;
 	}
 }

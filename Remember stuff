@@ -108,8 +108,8 @@ More optimization - for rendering multiple entities using the same model
 	This method improves performance of the CPU a bit, when there are many entities.
 	
 SKIPPED:
-Episode 14
-Simple terrain
+	Episode 14
+	Simple terrain
 
 Episode 15
 Simple transparency and lighting on back-faces
@@ -121,15 +121,15 @@ Simple transparency and lighting on back-faces
 	and the normal vector.
 
 SKIPPED:
-Episode 16
-Fog
-	Math for distance in GLSL: length(vec3 position1, vec3 position2)
+	Episode 16
+	Fog
+		Math for distance in GLSL: length(vec3 position1, vec3 position2)
 
 SKIPPED:
 Episode 17
 	Multitexturing
 		Blend map for mixing textures.
-		Possibly useful:
+		Possibly useful for:
 			terrain texturing
 			phasing from undamaged to damaged/destroyed textures
 			reflection or similar attributes on specific places on models, e.g. reflection image.
@@ -140,6 +140,40 @@ Episode 17
 Episode 18
 Player movement and Time-step
 
+Skipped, BUT:
 Episode 19
 3rd person camera
+	Instead of implementing third person camera, I implemented a flying FPS camera that can roll, pitch, yaw and move in all directions etc.
 
+Episode 20
+Mipmapping
+	A technique to optimize the rendering of textures. Built in function in OpenGL.
+	It automatically lowers resolution on textures that are far away.
+	
+Skipped:
+	Episode 21
+	Terrain Height Maps
+		Could essentially be a grey scale image where white is the lowest height and black is the highest height.
+		Possibly useful for:
+			for procedural generation of worlds
+	Episode 22
+	Terrain Collision Detection
+
+Episode 23
+Texture Atlases
+	Having entities with the same type of model using different textures.
+	This allows a model to contain multiple texture sets, or atlases, which it could use.
+
+Skipped:
+	Episode 24
+	 Rendering GUIs
+	 	Just a new render system for 2d.
+	 	Transparency for 2d can be done by (remember that it needs to be disabled after being used),
+	 	also, depth test for transparency must be turned off if they should be able to stack on top of each other
+	 	(which probably is why this is not used in 3d!):
+	 	GL11.glEnable(GL11.GL_BLEND)
+	 	GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA)
+	 	GL11.glDisable(GL11.GL_BLEND)
+
+Episode 25
+Multiple Lights

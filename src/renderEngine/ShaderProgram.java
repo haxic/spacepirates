@@ -12,6 +12,7 @@ import static org.lwjgl.opengl.GL20.glUniformMatrix4fv;
 import java.nio.FloatBuffer;
 
 import org.joml.Matrix4f;
+import org.joml.Vector2f;
 import org.joml.Vector3f;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL20;
@@ -22,9 +23,9 @@ public abstract class ShaderProgram {
 	private int programID;
 	private int vertexShaderID;
 	private int fragmentShaderID;
-	
+
 	private static FloatBuffer matrixBuffer = BufferUtils.createFloatBuffer(16);
-	
+
 	public ShaderProgram(String vertexFile, String fragmentFile) {
 		// Load shaders.
 		vertexShaderID = loadShader(vertexFile, GL20.GL_VERTEX_SHADER);
@@ -41,43 +42,47 @@ public abstract class ShaderProgram {
 		// Get all uniform locations specified for subclasses.
 		getAllUnifromLocations();
 	}
-	
+
 	protected abstract void getAllUnifromLocations();
-	
+
 	/**
 	 * Create location (unique id) for variable name.
 	 */
 	protected int getUniformLocation(String uniformName) {
 		return GL20.glGetUniformLocation(programID, uniformName);
 	}
-	
+
 	protected void loadBoolean(int location, boolean value) {
 		GL20.glUniform1f(location, value ? 1f : 0f);
 	}
-	
+
 	protected void loadFloat(int location, float value) {
 		GL20.glUniform1f(location, value);
 	}
-	
+
+	public void loadVector2f(int location, Vector2f vec2) {
+		GL20.glUniform2f(location, vec2.x, vec2.y);
+	}
+
 	protected void loadVector3f(int location, Vector3f vec3) {
 		GL20.glUniform3f(location, vec3.x, vec3.y, vec3.z);
 	}
-	
+
 	protected void loadMatrixf(int location, Matrix4f matrix) {
 		// TODO: check if this is correct!
 		matrix.get(matrixBuffer);
-		//matrixBuffer.flip();
+		// matrixBuffer.flip();
 		glUniformMatrix4fv(location, false, matrixBuffer);
 	}
-	
+
 	public void start() {
 		GL20.glUseProgram(programID);
 	}
-	
+
 	public void stop() {
 		GL20.glUseProgram(0);
 	}
-	
+
 	public void cleanUp() {
 		stop();
 		GL20.glDetachShader(programID, vertexShaderID);
@@ -86,13 +91,13 @@ public abstract class ShaderProgram {
 		GL20.glDeleteShader(fragmentShaderID);
 		GL20.glDeleteProgram(programID);
 	}
-	
+
 	protected abstract void bindAttributes();
-	
+
 	protected void bindAttribute(int attribute, String variableName) {
 		GL20.glBindAttribLocation(programID, attribute, variableName);
 	}
-	
+
 	private static int loadShader(String file, int type) {
 		// Convert file to string.
 		String source = FileUtils.loadAsString(file);
@@ -107,4 +112,5 @@ public abstract class ShaderProgram {
 		}
 		return shaderID;
 	}
+
 }

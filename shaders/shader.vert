@@ -12,14 +12,18 @@ out vec3 toCameraVector;
 uniform mat4 projection;
 uniform mat4 view;
 uniform mat4 model;
+
 uniform vec3 lightPosition;
+
+uniform float atlasSize;
+uniform vec2 textureOffset;
 
 
 void main(void) {
 	// Position on screen
 	vec4 worldPosition = model * vec4(position, 1.0);
 	gl_Position = projection * view * worldPosition;
-	pass_textureCoordinate = textureCoordinate;
+	pass_textureCoordinate = (textureCoordinate/atlasSize) + textureOffset;
 		
 	// Specular lighting
 	toCameraVector = (inverse(view) * vec4(0.0, 0.0, 0.0, 1.0)).xyz - worldPosition.xyz;

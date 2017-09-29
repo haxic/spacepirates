@@ -63,13 +63,13 @@ public class DisplayManager {
 	}
 
 	public static void updateDisplay() {
+		delta = calculateDelta();
 		glfwPollEvents();
 		KeyboardHandler.poll();
 		MouseHandler.poll();
 		MouseScrollHandler.poll();
-		glfwSwapBuffers(DisplayManager.windowID);
 		updateMouse();
-		delta = calculateDelta();
+		glfwSwapBuffers(DisplayManager.windowID);
 	}
 
 	private static boolean cursorEnabled;
