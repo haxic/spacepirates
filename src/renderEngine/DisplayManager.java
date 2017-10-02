@@ -20,8 +20,9 @@ import org.lwjgl.BufferUtils;
 
 public class DisplayManager {
 	public static long windowID;
-	public final static int width = 1600;
-	public final static int height = 800;
+	private final static int width = 1920;
+	private final static int height = 1080;
+	private final static double aspect = (double) width / (double) height;
 
 	private static double lastFrameTime;
 	private static float delta;
@@ -32,7 +33,7 @@ public class DisplayManager {
 			return;
 		}
 		glfwWindowHint(GLFW_RESIZABLE, GL_TRUE);
-		windowID = glfwCreateWindow(width, height, "Space Pirates", NULL, NULL);
+		windowID = glfwCreateWindow(width, height, "Heavy Space", NULL, NULL);
 		if (windowID == NULL) {
 			System.err.println("Could not create GLFW window!");
 			return;
@@ -134,12 +135,16 @@ public class DisplayManager {
 		return glfwGetTime();
 	}
 
-	private static int getHeight() {
+	public static int getHeight() {
 		return width;
 	}
 
-	private static int getWidth() {
+	public static int getWidth() {
 		return height;
+	}
+	
+	public static double getAspectRatio() {
+		return aspect;
 	}
 
 }

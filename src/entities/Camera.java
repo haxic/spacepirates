@@ -65,4 +65,8 @@ public class Camera {
 		R.mul((float) Math.cos(angle), v1).add(D.mul((float) Math.sin(angle), v2), R);
 		U.cross(R, D);
 	}
+	
+	public Vector3f getPosition() {
+		return E;
+	}
 }

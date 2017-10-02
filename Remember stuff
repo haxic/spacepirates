@@ -177,3 +177,89 @@ Skipped:
 
 Episode 25
 Multiple Lights
+	Nothing new really. Instead of passing one light source, we pass an array of light sources. What's important here,
+	is that there is a set (not variable) number of max lights that must be sent passed to the shaders.
+	However, I modified it by adding an extra uniform numberOfLights that decides how many lights the shaders can loop through,
+	which is the lights.size() up to MAX_LIGHTS in java code.
+	
+Episode 26
+Point Lights
+	Basically, add a distance base factor that reduces light.
+
+Episode 27
+Skybox - Cube Map Textures
+	Some information on Texture-parameters etc: https://open.gl/textures
+	The vertex shader for the cube map will use a 3d vector instead of 2d vector,
+	since the cube map is sampled using a direction vector, not a 2d texture coordinate.
+	The fragment shader uses a cube sampler, not a 2d sampler.
+	When loading the view matrix to the shader, set matrix positions 3,0 3,1 and 3,2 to 0 to not do translation (change position) 
+	
+Skipped:
+	Episode 28
+		Day/Night skybox - with fog matching terrain
+			Rotating skybox.
+			Blending between two skyboxes.
+			Terrain stuff. Maybe useful for planets.
+			mix(color1, color2, factor) in fragment shader, useful for making things fade.
+	Episode 29
+		Mouse Picking
+			Sends a ray outwards from the mouse position on the screen.
+			This is an alternative from using the cameras direction.
+			Can be used to click objects etc.
+	<Water tutorial>
+		Learn about FBOs here.
+		Normal map - Episode 7
+	Episode 30
+		Cel Shading
+			Probably not useful for my project at all.
+		
+Episode 31
+Normal mapping
+	Take a look at this again. Maybe improve?
+		
+Episode 32
+Font Rendering
+	Take a look at this again if you need text.
+	
+Episode 33
+Distance Field Text Rendering
+	Used for making smooth edged for text. Can also add shadow and border effects.
+
+Episode 34
+Patricle Effects
+	The particles should have a position in 3d space, but should always face the screen directly,
+	but may be rotated around the exis pointing towards the screen.
+	
+	We need to: view matrix * model matrix = modelview matrix, where the modelview matrix contains no rotation,
+	except for rotating around the axes pointing towards the screen.
+	
+Episode 35
+Animating Particle Textures
+	By having all the frames of a particle in one texture, we can use a texture atlas to pick which frame in the texture,
+	that a particle should use. To make the transition look nice, we mix the current and the next texture frames,
+	depending on how far a particle has progressed its life.
+
+Episode 36
+Instanced Rendering
+	The idea is to render multiple objects in one go rather than one by one, as it can be done much faster.
+	Currently, all non-vertex data, or instance data, is passed as uniform variables to the shaders.
+	Instead of doing that, we upload instance data as VBOs to the VAO instead (in addition to vertex data).
+	With all model data and all instances data uploaded in one go, opengl can proceed to render all of them in one go.
+	This means of course that all instance data (VBOs) in the VAO needs to be updated.
+	Another thing that can be done to speed up the proceed even more, is to use one VBO for all instance data,
+	rather than one VBO per type of instance data - the instance data will be interleaved in one big VBO.
+	
+	Please improve the Particle system! It needs to be more dynamic. Rewatch episodes if necessary.
+		- Reuse particle objects rather than creating new ones.
+		- Add an option to choose between normal and non-additive blending.
+		- Only sort non-additive blend.
+		
+Skipped:
+	Episode 37
+	Procedural terrain
+		Not using terrain.
+		
+Episode 38
+Shadow mapping
+	Essentially, we will render the scene once per light from the lights first,
+	then we render from the cameras perspective. The idea is to create shadow maps that are applied when rendering from the camera.

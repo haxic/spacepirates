@@ -6,30 +6,44 @@ import java.util.List;
 import java.util.Map;
 
 import org.joml.Matrix4f;
+import org.joml.Vector4f;
 import org.lwjgl.opengl.GL11;
 
 import entities.Camera;
 import entities.Entity;
 import entities.Light;
 import models.TexturedModel;
+import normalMappingRenderer.NormalMappingRenderer;
+import utils.Loader;
+import utils.Maths;
 
 public class MasterRenderer {
 
-	private static final float FOV = 70;
-	private static final float NEAR_PLANE = 0.1f;
-	private static final float FAR_PLANE = 1000f;
+	public static final float FOV = 70;
+	public static final float NEAR_PLANE = 0.1f;
+	public static final float FAR_PLANE = 1000f;
 	Matrix4f projectionMatrix;
 
-	private StaticShader shader = new StaticShader();
+	private StaticShader staticShader = new StaticShader();
 	private EntityRenderer entityRenderer;
+	private NormalMappingRenderer normalMappingRenderer;
+	private SkyboxRenderer skyboxRenderer;
+	
 	private Map<TexturedModel, List<Entity>> entities = new HashMap<>();
+	private Map<TexturedModel, List<Entity>> normalMappedEntities = new HashMap<>();
 
-	public MasterRenderer() {
+	public MasterRenderer(Loader loader) {
 		enableBackCulling();
 		// Create projection matrix.
-		projectionMatrix = new Matrix4f().perspective((float) Math.toRadians(FOV), DisplayManager.width / DisplayManager.height, NEAR_PLANE, FAR_PLANE);
+		projectionMatrix = new Matrix4f().perspective((float) Math.toRadians(FOV), (float) DisplayManager.getAspectRatio(), NEAR_PLANE, FAR_PLANE);
 		// Create renderers.
-		entityRenderer = new EntityRenderer(shader, projectionMatrix);
+		entityRenderer = new EntityRenderer(staticShader, projectionMatrix);
+		skyboxRenderer = new SkyboxRenderer(loader, projectionMatrix);
+		normalMappingRenderer = new NormalMappingRenderer(projectionMatrix);
+	}
+	
+	public Matrix4f getProjectionMatrix() {
+		return projectionMatrix;
 	}
 
 	public static void enableBackCulling() {
@@ -43,15 +57,27 @@ public class MasterRenderer {
 		GL11.glDisable(GL11.GL_CULL_FACE);
 	}
 
-	public void render(Light light, Camera camera) {
+	public void renderScene(List<Entity> entities, List<Entity> normalMappedEntities, List<Light> lights, Camera camera) {
+		for (Entity entity : entities)
+			processEntity(entity);
+		for (Entity entity : normalMappedEntities)
+			processNormalMappedEntity(entity);
+		render(lights, camera);
+	}
+	
+	private void render(List<Light> lights, Camera camera) {
 		prepare();
-		shader.start();
-		shader.loadLight(light);
-		shader.loadAmbientLight();
-		shader.loadViewMatrix(camera);
+		Matrix4f viewMatrix = Maths.createViewMatrix(camera);
+		staticShader.start();
+		staticShader.loadLights(lights);
+		staticShader.loadAmbientLight();
+		staticShader.loadViewMatrix(viewMatrix);
 		entityRenderer.render(entities);
-		shader.stop();
+		staticShader.stop();
+		normalMappingRenderer.render(normalMappedEntities, lights, camera);
+		skyboxRenderer.render(camera);
 		entities.clear();
+		normalMappedEntities.clear();
 	}
 
 	/**
@@ -63,11 +89,13 @@ public class MasterRenderer {
 		GL11.glEnable(GL11.GL_DEPTH_TEST);
 		// Clear screen.
 		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
-		GL11.glClearColor(1, 1, 1, 1);
+		GL11.glClearColor(0, 0, 0, 1);
 	}
 
 	public void cleanUp() {
-		shader.cleanUp();
+		staticShader.cleanUp();
+		normalMappingRenderer.cleanUp();
+		skyboxRenderer.clearUp();
 	}
 
 	public void processEntity(Entity entity) {
@@ -79,6 +107,18 @@ public class MasterRenderer {
 			List<Entity> newBatch = new ArrayList<>();
 			newBatch.add(entity);
 			entities.put(entityModel, newBatch);
+		}
+	}
+	
+	public void processNormalMappedEntity(Entity entity) {
+		TexturedModel entityModel = entity.getModel();
+		List<Entity> batch = normalMappedEntities.get(entityModel);
+		if (batch != null) {
+			batch.add(entity);
+		} else {
+			List<Entity> newBatch = new ArrayList<>();
+			newBatch.add(entity);
+			normalMappedEntities.put(entityModel, newBatch);
 		}
 	}
 }

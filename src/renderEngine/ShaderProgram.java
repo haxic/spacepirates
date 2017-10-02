@@ -14,6 +14,7 @@ import java.nio.FloatBuffer;
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
+import org.joml.Vector4f;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL20;
 
@@ -40,10 +41,10 @@ public abstract class ShaderProgram {
 		GL20.glLinkProgram(programID);
 		GL20.glValidateProgram(programID);
 		// Get all uniform locations specified for subclasses.
-		getAllUnifromLocations();
+		getAllUniformLocations();
 	}
 
-	protected abstract void getAllUnifromLocations();
+	protected abstract void getAllUniformLocations();
 
 	/**
 	 * Create location (unique id) for variable name.
@@ -54,6 +55,10 @@ public abstract class ShaderProgram {
 
 	protected void loadBoolean(int location, boolean value) {
 		GL20.glUniform1f(location, value ? 1f : 0f);
+	}
+	
+	protected void loadInt(int location, int value) {
+		GL20.glUniform1i(location, value);
 	}
 
 	protected void loadFloat(int location, float value) {
@@ -66,6 +71,10 @@ public abstract class ShaderProgram {
 
 	protected void loadVector3f(int location, Vector3f vec3) {
 		GL20.glUniform3f(location, vec3.x, vec3.y, vec3.z);
+	}
+	
+	protected void loadVector4f(int location, Vector4f vec4) {
+		GL20.glUniform4f(location, vec4.x, vec4.y, vec4.z, vec4.w);
 	}
 
 	protected void loadMatrixf(int location, Matrix4f matrix) {
